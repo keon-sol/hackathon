@@ -1,4 +1,4 @@
-import pandas as pd 
+import pandas as pd
 import numpy as np 
 import seaborn as sns
 import matplotlib.pyplot as plt 
@@ -9,8 +9,8 @@ import re
 import string
 
 #imports data on what news is fake and what news is real
-data_fake = pd.read_csv('/Users/keon/Desktop/cs_projects/hackathon/src/data/Fake.csv')
-data_true = pd.read_csv('/Users/keon/Desktop/cs_projects/hackathon/src/data/True.csv')
+data_fake = pd.read_csv('Fake.csv')
+data_true = pd.read_csv('True.csv')
 data_fake.head()
 data_true.head()
 
@@ -58,7 +58,7 @@ x = data['text']
 y = data['class']
 
 #Defining Training and Testing Data and Splitting Them Into &5 -25 Percent Ratio (?)
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.25)
+x_train, x_test, y_train, t_test = train_test_split(x, y, test_size = 0.25)
 
 #putting raw data into a matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -89,6 +89,41 @@ pred_dt = DT.predict(xv_test)
 DT.score(xv_test, y_test)
 print(classification_report(y_test, pred_dt))
 
+from sklearn.ensemble import GradientBoostingClassifier
+GB = GradientBoostingClassifier(random_state = 0)
+GB.fit(xv_train, y_train)
+
+pred_gb = GB.predict(xv_test)
+
+print(classification_report(y_test, pred_gb))
+
+from sklearn.ensemble import RandomForestClassifier
+
+RF = RandomForestClassifier(random_state = 0)
+RF.fit(xv_train, y_train)
+
+pred_rf = RF.predict(xv_test)
+
+RF.score(xv_test, y_test)
+
+print(classification_report(y_test, pred_rf))
+
+def output_label(n):
+    if n == 0:
+        return "Fake News"
+    elif n == 1:
+        return "Not Fake News"
+
+def manual_testing(news):
+    testing_news = {"text":[news]}
+    new_def_test = pd.DataFrame(testing_news)
+    new_def_test["text"] = new_def_test["text"].apply(wordopt)
+    new_x_test = new_def_test["text"]
+    new_xv_test = vectorization.transform(new_x_test)
+    pred_LR = LR.predict(new_xv_test)
+    pred_DT = DT.predict(new_xv_test)
+    
+    return print("\n\nLR Prediction: {} \nDT Prediction:".format(output_label(pred_LR[0]), output_label(pred_DT[0])))
 
 news = str(input())
 manual_testing(news)
