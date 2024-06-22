@@ -7,6 +7,7 @@ function IndexSidePanel() {
   async function handleSubmit() {
     alert(data);
 
+    try {
     const analysisResponse = await fetch(MODEL_ENDPOINT, {
       method: "POST",
       headers: {
@@ -17,9 +18,10 @@ function IndexSidePanel() {
         data: data,
       })
     });
-
-    alert('test');
-    // alert(analysisResponse.status);
+  } catch (err) {
+    alert(err.message);
+  }
+  console.log("hello");
   }
 
   return (
