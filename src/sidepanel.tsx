@@ -4,8 +4,23 @@ function IndexSidePanel() {
   const [data, setData] = useState("")
   const MODEL_ENDPOINT = "http://127.0.0.1:5000/analyze"; // model is hosted locally
 
-  function handleSubmit() {
+  async function handleSubmit() {
     alert(data);
+
+    try {
+      const analysisResponse = await fetch(MODEL_ENDPOINT, {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: data,
+        })
+      });
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
   return (
