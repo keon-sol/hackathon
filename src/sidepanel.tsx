@@ -7,20 +7,19 @@ function IndexSidePanel() {
   async function handleSubmit() {
     alert(data);
 
-    try {
-      const analysisResponse = await fetch(MODEL_ENDPOINT, {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: data,
-        })
-      });
-    } catch (err) {
-      alert(err.message);
-    }
+    const analysisResponse = await fetch(MODEL_ENDPOINT, {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        data: data,
+      })
+    });
+
+    alert('test');
+    // alert(analysisResponse.status);
   }
 
   return (
