@@ -2,6 +2,11 @@ import { useState } from "react"
 
 function IndexSidePanel() {
   const [data, setData] = useState("")
+  const MODEL_ENDPOINT = "http://127.0.0.1:5000/analyze"; // model is hosted locally
+
+  function handleSubmit() {
+    alert(data);
+  }
 
   return (
     <div
@@ -18,10 +23,10 @@ function IndexSidePanel() {
         </a>{" "}
         Extension!
       </h2>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" target="_blank">
-        View Docs
-      </a>
+      <form onSubmit={handleSubmit}>
+        <input type = "text" onChange={(e) => setData(e.target.value)} value={data} />
+        <input type="submit" value="Submit" />
+      </form>
     </div>
   )
 }
