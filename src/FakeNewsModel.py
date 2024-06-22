@@ -9,8 +9,8 @@ import re
 import string
 
 #imports data on what news is fake and what news is real
-data_fake = pd.read_csv('Fake.csv')
-data_true = pd.read_csv('True.csv')
+data_fake = pd.read_csv('/Users/keon/Desktop/cs_projects/hackathon/src/data/Fake.csv')
+data_true = pd.read_csv('/Users/keon/Desktop/cs_projects/hackathon/src/data/True.csv')
 data_fake.head()
 data_true.head()
 
@@ -58,7 +58,7 @@ x = data['text']
 y = data['class']
 
 #Defining Training and Testing Data and Splitting Them Into &5 -25 Percent Ratio (?)
-x_train, x_test, y_train, t_test = train_test_split(x, y, test_size = 0.25)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.25)
 
 #putting raw data into a matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
