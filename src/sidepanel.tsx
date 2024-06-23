@@ -1,7 +1,10 @@
-import { useState } from "react"
+import React, { useState } from "react"
+
+import "src/components/button.css"
 
 function IndexSidePanel() {
   const [data, setData] = useState("")
+  const [result, setResult] = useState(null)
   const MODEL_ENDPOINT = "http://127.0.0.1:5000/analyze" // model is hosted locally
 
   async function handleSubmit() {
@@ -17,14 +20,11 @@ function IndexSidePanel() {
         })
       })
 
-      // const analysisResult = await analysisResponse.json();
       analysisResponse.json().then((data) => {
-        // alert(JSON.stringify(data));
-        Object.values(data).forEach(value => {
-          alert(value);
-      });
-      });
-      //alert(analysisResult.result)
+        Object.values(data).forEach((value) => {
+          setResult(value)
+        })
+      })
     } catch (err) {
       alert(err)
       alert(err.stack)
@@ -36,20 +36,22 @@ function IndexSidePanel() {
       style={{
         display: "flex",
         flexDirection: "column",
-        padding: 16
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 16,
+        height: "100vh",
+        backgroundColor: "#f5f5f5"
       }}>
-      <h2>
-        Welcome to your
-        <a
-          href="https://www.plasmo.com"
-          target="_blank"
-          rel="noopener noreferrer">
-          {" "}
-          Plasmo
-        </a>{" "}
-        Extension!
+      <h2 style={{ marginBottom: 16, textAlign: "center" }}>
+        Misinformation Detector
       </h2>
       <form
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%"
+        }}
         onSubmit={(e) => {
           e.preventDefault()
           handleSubmit()
@@ -58,9 +60,35 @@ function IndexSidePanel() {
           type="text"
           onChange={(e) => setData(e.target.value)}
           value={data}
+          style={{
+            marginBottom: 16,
+            padding: 8,
+            width: "100%",
+            maxWidth: 300,
+            fontSize: 16,
+            boxSizing: "border-box"
+          }}
         />
-        <input type="submit" value="Submit" />
+        <button type="submit" className="submit-button">
+          Submit
+        </button>
       </form>
+      {result && ( // Display the result if it exists
+        <div
+          style={{
+            marginTop: 16,
+            padding: 16,
+            backgroundColor: "#fff",
+            borderRadius: 4,
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+            maxWidth: 300,
+            width: "100%",
+            textAlign: "center"
+          }}>
+          <h3>Analysis Result</h3>
+          <p>Most Likely {result}</p>
+        </div>
+      )}
     </div>
   )
 }
