@@ -1,21 +1,55 @@
 import React, { useState } from "react"
+import axios, * as others from 'axios';
+import cheerio from "cheerio";
 
 import "src/components/button.css"
 
 function IndexSidePanel() {
   const [data, setData] = useState("")
+  const [isLoading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
   const MODEL_ENDPOINT = "http://127.0.0.1:5000/analyze" // model is hosted locally
 
   async function handleSubmit() {
+    setLoading(true);
+    setResult(null);
     // var currURL = "";
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       var currURL = tabs[0].url
-      fetchBackend(currURL)
+      // fetchBackend(currURL)
+      webScraping(currURL);
     })
   }
 
-  async function fetchBackend(URL) {
+  async function webScraping(URL) {
+      const {data} = await axios.get(URL);
+      const $ = cheerio.load(data);
+      const header1 = $('h1');
+      const header2 = $('h1');
+      const paragraphs = $('p');
+
+      const paragraphTexts = [];
+      paragraphs.each((index, element) => {
+        paragraphTexts.push($(element).text().replace(/(\r\n|\n|\r)/gm, "").trim());
+      })
+      const header1Texts = [];
+      header1.each((index, element) => {
+        header1Texts.push($(element).text().replace(/(\r\n|\n|\r)/gm, "").trim());
+      })
+      const header2Texts = [];
+      header2.each((index, element) => {
+        header2Texts.push($(element).text().replace(/(\r\n|\n|\r)/gm, "").trim());
+      })
+
+      const combinedTextP = paragraphTexts.join(" ");
+      const combinedTextH1 = header1Texts.join(" ");
+      const combinedTextH2 = header2Texts.join(" ");
+      const combinedText = combinedTextH1 + " " + combinedTextP + " " + combinedTextH2;
+
+      fetchBackend(URL, combinedText);
+  }
+
+  async function fetchBackend(URL, combinedText) {
     try {
       const analysisResponse = await fetch(MODEL_ENDPOINT, {
         method: "POST",
@@ -24,13 +58,12 @@ function IndexSidePanel() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          data: data,
+          data: combinedText,
           currURL: URL
         })
       })
       analysisResponse.json().then((data) => {
         Object.values(data).forEach((value) => {
-          alert(value)
           setResult(value)
         })
       })
@@ -38,6 +71,7 @@ function IndexSidePanel() {
       alert(err)
       alert(err.stack)
     }
+    setLoading(false);
   }
 
   return (
@@ -65,24 +99,11 @@ function IndexSidePanel() {
           e.preventDefault()
           handleSubmit()
         }}>
-        <input
-          type="text"
-          onChange={(e) => setData(e.target.value)}
-          value={data}
-          style={{
-            marginBottom: 16,
-            padding: 8,
-            width: "100%",
-            maxWidth: 300,
-            fontSize: 16,
-            boxSizing: "border-box"
-          }}
-        />
         <button type="submit" className="submit-button">
-          Submit
+          Analyze Webpage
         </button>
       </form>
-      {!result ? (<p>Loading...</p>) : (<p></p>)}
+      {isLoading ? (<p>Analyzing page content...</p>) : (<p></p>)}
       {result && ( // Display the result if it exists
         <div
           style={{
