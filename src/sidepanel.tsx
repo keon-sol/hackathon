@@ -83,6 +83,7 @@ function IndexSidePanel() {
           Submit
         </button>
       </form>
+      {!result ? (<p>Loading...</p>) : (<p></p>)}
       {result && ( // Display the result if it exists
         <div
           style={{
