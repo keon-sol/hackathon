@@ -17,11 +17,9 @@ def hello_world():
 
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
-    print("hello", file=sys.stderr)
     content = request.json
     data = content["data"]
     result = manual_testing(data)
-    print(result, file=sys.stderr)
     return jsonify({
         "result": result,
     })
