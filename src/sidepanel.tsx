@@ -8,11 +8,13 @@ function IndexSidePanel() {
   const [data, setData] = useState("")
   const [isLoading, setLoading] = useState(false)
   const [result, setResult] = useState(null)
+  const [summary, setSummary] = useState(null)
   const MODEL_ENDPOINT = "http://127.0.0.1:5000/analyze" // model is hosted locally
 
   async function handleSubmit() {
     setLoading(true);
     setResult(null);
+    setSummary(null);
     // var currURL = "";
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       var currURL = tabs[0].url
@@ -64,7 +66,8 @@ function IndexSidePanel() {
       })
       analysisResponse.json().then((data) => {
         Object.values(data).forEach((value) => {
-          setResult(value)
+          setSummary(data.summary)
+          setResult(data.result)
         })
       })
     } catch (err) {
@@ -117,7 +120,8 @@ function IndexSidePanel() {
             textAlign: "center"
           }}>
           <h3>Analysis Result</h3>
-          <p>Most Likely {result}</p>
+          <h2>Likely {result}</h2>
+          <p style={{textAlign:"left", fontSize:"0.85rem"}}>Learn more: <br></br><br></br>{summary}</p>
         </div>
       )}
     </div>

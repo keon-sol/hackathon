@@ -36,7 +36,7 @@ def analyze_text():
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a news reporter who is very skilled at reading, analyzing, and summarizing news articles."},
-            {"role": "user", "content": f"Write a 1000 word summary of the news article from the URL: {currURL}"}
+            {"role": "user", "content": f"Give me three sources where I can find more information on this article with very short descriptions. Do not say stuff like 'sure!' or 'okay!': {currURL}"}
         ]
     )
 
@@ -49,6 +49,7 @@ def analyze_text():
 
     return jsonify({
         "result": result,
+        "summary": openai_response.content
     })
 
 if __name__ == "__main__":
