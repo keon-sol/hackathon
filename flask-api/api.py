@@ -19,7 +19,6 @@ def hello_world():
 def analyze_text():
     content = request.json
     data = content["data"]
-    currURL = content["currURL"]
     result = manual_testing(data)
     return jsonify({
         "result": result,

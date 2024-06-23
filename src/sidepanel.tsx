@@ -8,10 +8,14 @@ function IndexSidePanel() {
   const MODEL_ENDPOINT = "http://127.0.0.1:5000/analyze" // model is hosted locally
 
   async function handleSubmit() {
-    var currURL
+    // var currURL = "";
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      currURL = tabs[0].url
-    })
+      var currURL = tabs[0].url;
+      fetchBackend(currURL);
+    });
+  }
+
+  async function fetchBackend(URL) {
     try {
       const analysisResponse = await fetch(MODEL_ENDPOINT, {
         method: "POST",
@@ -21,7 +25,7 @@ function IndexSidePanel() {
         },
         body: JSON.stringify({
           data: data,
-          currURL: currURL
+          currURL: URL
         })
       })
 
