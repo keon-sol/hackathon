@@ -1,10 +1,12 @@
+from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
+import sys
 import pandas as pd
 import re
 import string
 import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Function to clean the text
 def wordopt(text):
     text = text.lower()
     text = re.sub('\[.*?\]', '', text)
@@ -38,10 +40,7 @@ def manual_testing(news):
     new_xv_test = vectorization.transform(new_x_test)
     
     pred_LR = LR.predict(new_xv_test)
-    print(output_label(pred_LR[0]))
+    result = output_label(pred_LR[0])
+    print(result)
     
-    return print("\nPrediction: {}".format(output_label(pred_LR[0])))
-
-# Example of calling the function with user input
-news = str(input("Enter news text: "))
-manual_testing(news)
+    return result
