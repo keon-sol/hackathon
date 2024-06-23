@@ -10,9 +10,9 @@ function IndexSidePanel() {
   async function handleSubmit() {
     // var currURL = "";
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      var currURL = tabs[0].url;
-      fetchBackend(currURL);
-    });
+      var currURL = tabs[0].url
+      fetchBackend(currURL)
+    })
   }
 
   async function fetchBackend(URL) {
@@ -28,7 +28,6 @@ function IndexSidePanel() {
           currURL: URL
         })
       })
-
       analysisResponse.json().then((data) => {
         Object.values(data).forEach((value) => {
           alert(value)
